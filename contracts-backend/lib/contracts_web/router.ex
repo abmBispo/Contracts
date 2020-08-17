@@ -9,6 +9,7 @@ defmodule ContractsWeb.Router do
     scope "/v1", V1 do
       pipe_through :api
       resources "/contracts", ContractController, except: [:new, :edit]
+      resources "/parts", PartController, except: [:new, :edit]
     end
   end
 end
