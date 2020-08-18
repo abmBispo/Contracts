@@ -6,8 +6,9 @@ defmodule ContractsWeb.Api.V1.ContractController do
 
   action_fallback ContractsWeb.FallbackController
 
-  def index(conn, _params) do
-    contracts = Agreements.list_contracts()
+  def index(conn, params) do
+    params |> IO.inspect(label: "params")
+    contracts = Agreements.list_contracts(params)
     render(conn, "index.json", contracts: contracts)
   end
 

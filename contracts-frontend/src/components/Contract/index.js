@@ -1,12 +1,33 @@
-import React from 'react';
-import { Breadcrumb } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Tabs } from 'antd';
+import Form from './Form';
+import axios from 'axios';
+import { BASE_URL } from '../../main/consts';
+import List from './List';
 
-export default () => (
-  <>
-    <Breadcrumb style={{ margin: '16px 0' }}>
-      <Breadcrumb.Item>App</Breadcrumb.Item>
-      <Breadcrumb.Item>Contracts</Breadcrumb.Item>
-    </Breadcrumb>
-    <div className="site-layout-content">Contracts</div>
-  </>
-);
+const { TabPane } = Tabs;
+
+export default () => {
+  const [formValues, setFormValues] = useState({
+    "contract[title]": 'Teste'
+  })
+
+  return (
+    <>
+      <div className="card-container" style={{ marginTop: 20, marginBottom: 25 }}>
+        <Tabs type="card">
+          <TabPane tab="List contracts" key="1">
+            <div className="site-layout-content">
+              <List />
+            </div>
+          </TabPane>
+          <TabPane tab="Create contract" key="2">
+            <div className="site-layout-content">
+              <Form values={formValues} />
+            </div>
+          </TabPane>
+        </Tabs>
+      </div>
+    </>
+  )
+};

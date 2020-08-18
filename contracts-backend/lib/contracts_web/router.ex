@@ -2,6 +2,7 @@ defmodule ContractsWeb.Router do
   use ContractsWeb, :router
 
   pipeline :api do
+    plug CORSPlug, origin: "*"
     plug :accepts, ["json"]
   end
 

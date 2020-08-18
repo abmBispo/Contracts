@@ -4,7 +4,7 @@ use Mix.Config
 config :contracts, Contracts.Repo,
   username: "postgres",
   password: "postgres",
-  database: "elixir_ecommerce_dev",
+  database: "contracts_dev",
   hostname: "127.0.0.1",
   show_sensitive_data_on_connection_error: true,
   pool_size: 10

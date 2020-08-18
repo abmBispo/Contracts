@@ -10,6 +10,10 @@
   width: 120px;
   height: 31px;
   background: rgba(255, 255, 255, 0.2);
-  margin: 16px 24px 16px 0;
+  margin: 0px 0px 0px 0px;
   float: left;
+}
+
+.ant-tabs-top > .ant-tabs-nav, .ant-tabs-bottom > .ant-tabs-nav, .ant-tabs-top > div > .ant-tabs-nav, .ant-tabs-bottom > div > .ant-tabs-nav {
+  margin: 0
 }
