@@ -20,8 +20,15 @@ defmodule ContractsWeb.Api.V1.ContractView do
     %{
       id: contract.id,
       title: contract.title,
-      begin: contract.begin,
-      end: contract.end
+      begin: locale_date(:pt_br, contract.begin),
+      end: locale_date(:pt_br, contract.end)
     }
+  end
+
+  defp locale_date(:pt_br, date) do
+    [date.day, date.month, date.year]
+      |> Enum.map(&to_string/1)
+      |> Enum.map(&String.pad_leading(&1, 2, "0"))
+      |> Enum.join("/")
   end
 end
