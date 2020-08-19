@@ -7,17 +7,28 @@ import {
   Input,
   Button,
   DatePicker,
-  Upload
+  Upload,
+  message
 } from 'antd';
 
-export default ({ changeTab }) => {
+const key = 'updatable';
+
+const openMessage = () => {
+  message.loading({ content: 'Saving contract...', key });
+  setTimeout(() => {
+    message.success({ content: 'Contract has been saved successfully!', key, duration: 2 });
+  }, 1000);
+};
+
+export default ({ removeTab, initialValues }) => {
   const [form] = Form.useForm();
 
   const onFinish = (values) => {
     axios.post(`${BASE_URL}/contracts`, { contract: values })
       .then((res) => {
         form.resetFields();
-        changeTab('1');
+        removeTab('new-contract');
+        openMessage();
       })
   }
 
@@ -34,6 +45,11 @@ export default ({ changeTab }) => {
     }));
   };
 
+  const handleChange = (e) => {
+    // console.log("e.target", e.target);
+    // console.log("form.fields", form.getFieldsValue());
+  }
+
   return (
     <>
       <Form
@@ -43,7 +59,9 @@ export default ({ changeTab }) => {
         layout="horizontal"
         name='contract'
         size='large'
-        onFinish={onFinish}>
+        initialValues={initialValues}
+        onFinish={onFinish}
+        onChange={handleChange}>
 
         <Form.Item rules={requiredFields} label="Contract title" name='title'>
           <Input />
