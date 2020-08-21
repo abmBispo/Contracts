@@ -10,6 +10,7 @@ import {
   Upload,
   message
 } from 'antd';
+import { formatDate } from '../../../utils/Date';
 
 const key = 'updatable';
 
@@ -24,7 +25,21 @@ export default ({ removeTab, initialValues }) => {
   const [form] = Form.useForm();
 
   const onFinish = (values) => {
-    axios.post(`${BASE_URL}/contracts`, { contract: values })
+    const parsedValues = {
+      title: values.title,
+      begin: formatDate(new Date(values.begin)),
+      end: formatDate(new Date(values.end)),
+      file: new Blob([values.file.file], { type: 'text/pdf' }),
+      filename: values.file.file.name
+    }
+
+    let data = new FormData();
+    data.append('contract[title]', parsedValues.title);
+    data.append('contract[begin]', parsedValues.begin);
+    data.append('contract[end]', parsedValues.end);
+    data.append('contract[file]', parsedValues.file, parsedValues.filename);
+
+    axios.post(`${BASE_URL}/contracts`, data)
       .then((res) => {
         form.resetFields();
         removeTab('new-contract');
