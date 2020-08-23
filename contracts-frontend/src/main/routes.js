@@ -5,8 +5,8 @@ import Part from '../components/Part';
 
 export default () => (
   <Router history={hashHistory}>
-    <Route path='/' component={Contract} />
+    <Route path='/contracts' component={Contract} />
     <Route path='/parties' component={Part} />
-    <Redirect from='*' to='/' />
+    <Redirect from='*' to='/contracts' />
   </Router>
 );
