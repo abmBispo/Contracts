@@ -1,12 +1,13 @@
 import React from 'react';
-import { Router, Route, Redirect, hashHistory } from 'react-router';
+import { Route, Redirect } from 'react-router-dom';
 import Contract from '../components/Contract';
 import Part from '../components/Part';
+import FormPart from '../components/Part/Form';
 
 export default () => (
-  <Router history={hashHistory}>
-    <Route path='/contracts' component={Contract} />
-    <Route path='/parties' component={Part} />
-    <Redirect from='*' to='/contracts' />
-  </Router>
+  <>
+    <Route exact path='/contracts' component={Contract} />
+    <Route exact path='/parties' component={Part} />
+    <Route exact path='/parties/new' component={FormPart} />
+  </>
 );
