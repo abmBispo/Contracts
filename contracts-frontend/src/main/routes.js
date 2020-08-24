@@ -9,6 +9,6 @@ export default () => (
     <Route exact path='/contracts' component={Contract} />
     <Route exact path='/parties' component={Part} />
     <Route exact path='/parties/new' component={FormPart} />
-    <Route exact path='/parties/:partId/update' component={FormPart} />
+    <Route exact path='/parties/:userId/update' component={FormPart} />
   </>
 );

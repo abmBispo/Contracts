@@ -17,7 +17,7 @@ const openMessage = (content = '') => {
   message.loading({ content: 'Saving part...', key });
   setTimeout(() => {
     message.success({ content: content, key, duration: 2 });
-  }, 1000);
+  }, 500);
 };
 
 const parseValues = (values) => {
@@ -48,7 +48,7 @@ export default ({ match }) => {
 
   const { userId } = match.params;
 
-  if (match.params.length > 0) {
+  if (userId) {
     useEffect(() => {
       axios.get(`${BASE_URL}/parties/${userId}`)
         .then((res) => {
@@ -118,7 +118,7 @@ export default ({ match }) => {
 
           <Form.Item wrapperCol={{ span: 24 }}>
             <Button type="primary" htmlType="submit" style={{ float: 'right' }}>
-              {user ? "Update" : "Save"}
+              {userId ? "Update" : "Save"}
             </Button>
           </Form.Item>
         </Form>

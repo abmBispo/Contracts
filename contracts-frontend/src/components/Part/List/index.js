@@ -1,34 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Table } from 'antd';
+import { Table, Button, Tooltip } from 'antd';
 import axios from 'axios';
 import { BASE_URL } from '../../../main/consts';
-
-const columns = [
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    sorter: (a, b) => a.title.length - b.title.length,
-    sortDirections: ['descend', 'ascend'],
-  },
-  {
-    title: 'Surname',
-    dataIndex: 'surname',
-    sorter: (a, b) => a.begin - b.begin,
-    sortDirections: ['descend', 'ascend'],
-  },
-  {
-    title: 'Tax ID',
-    dataIndex: 'tax_id',
-    sortDirections: ['descend', 'ascend'],
-    sorter: (a, b) => a.end - b.end,
-  },
-  {
-    title: 'Email',
-    dataIndex: 'email',
-    sortDirections: ['descend', 'ascend'],
-    sorter: (a, b) => a.end - b.end,
-  },
-];
+import { useHistory } from 'react-router-dom';
+import { EditOutlined } from '@ant-design/icons'
 
 const mapApiToProps = params => {
   return {
@@ -41,6 +16,48 @@ export default (props) => {
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState({ current: 1, pageSize: 25 });
   const [data, setData] = useState([]);
+  let history = useHistory();
+
+  const handleEditClick = (userId) => {
+    history.push(`/parties/${userId}/update`);
+  }
+
+  const columns = [
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      sorter: (a, b) => a.name.length - b.name.length,
+      sortDirections: ['descend', 'ascend'],
+    },
+    {
+      title: 'Surname',
+      dataIndex: 'surname',
+      sorter: (a, b) => a.surname - b.surname,
+      sortDirections: ['descend', 'ascend'],
+    },
+    {
+      title: 'Tax ID',
+      dataIndex: 'tax_id',
+      sortDirections: ['descend', 'ascend'],
+      sorter: (a, b) => a.tax_id - b.tax_id,
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      sortDirections: ['descend', 'ascend'],
+      sorter: (a, b) => a.email - b.email,
+    },
+    {
+      title: 'Actions',
+      render: (text, record) => (
+        <Tooltip title={`Edit user ${record.name}`}>
+          <Button onClick={() => handleEditClick(record.id)} type='primary'>
+            <EditOutlined style={{ fontSize: 20 }} />
+          </Button>
+        </Tooltip>
+      )
+    },
+  ];
 
   useEffect(() => fetch(), [props.activeKey]);
 
