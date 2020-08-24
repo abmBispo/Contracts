@@ -111,9 +111,7 @@ defmodule Contracts.Agreements do
       [%Part{}, ...]
 
   """
-  def list_parts do
-    Repo.all(Part)
-  end
+  def list_parts(%{ "page" => page }), do: Repo.paginate(Part, page: page)
 
   @doc """
   Gets a single part.

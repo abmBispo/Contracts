@@ -6,8 +6,8 @@ defmodule ContractsWeb.Api.V1.PartController do
 
   action_fallback ContractsWeb.FallbackController
 
-  def index(conn, _params) do
-    parts = Agreements.list_parts()
+  def index(conn, params) do
+    parts = Agreements.list_parts(params)
     render(conn, "index.json", parts: parts)
   end
 

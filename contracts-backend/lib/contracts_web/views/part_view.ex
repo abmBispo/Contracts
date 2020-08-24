@@ -3,7 +3,13 @@ defmodule ContractsWeb.Api.V1.PartView do
   alias ContractsWeb.Api.V1.PartView
 
   def render("index.json", %{parts: parts}) do
-    %{data: render_many(parts, PartView, "part.json")}
+    %{
+      pagination: %{
+        total: parts.total_entries,
+        current: parts.page_number
+      },
+      data: render_many(parts, PartView, "part.json")
+    }
   end
 
   def render("show.json", %{part: part}) do

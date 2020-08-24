@@ -1,5 +1,6 @@
 import React from 'react';
 import { Breadcrumb } from 'antd';
+import List from './List';
 
 export default () => (
   <>
@@ -7,6 +8,8 @@ export default () => (
       <Breadcrumb.Item>App</Breadcrumb.Item>
       <Breadcrumb.Item>Parties</Breadcrumb.Item>
     </Breadcrumb>
-    <div className="site-layout-content">Parties</div>
+    <div className="site-layout-content">
+      <List />
+    </div>
   </>
 );
