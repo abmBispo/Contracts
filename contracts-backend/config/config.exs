@@ -18,6 +18,9 @@ config :contracts, ContractsWeb.Endpoint,
   pubsub_server: Contracts.PubSub,
   live_view: [signing_salt: "SmOR1qlQ"]
 
+# Configure Arc Storage
+config :arc, storage: Arc.Storage.Local
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

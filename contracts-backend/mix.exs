@@ -36,6 +36,7 @@ defmodule Contracts.MixProject do
       {:phoenix, "~> 1.5.1"},
       {:ex_cldr_dates_times, "~> 2.0"},
       {:cors_plug, "~> 1.5"},
+      {:arc_ecto, "~> 0.11.3"},
       {:scrivener_ecto, "~> 2.0"},
       {:phoenix_ecto, "~> 4.1"},
       {:ecto_sql, "~> 3.4"},

@@ -6,6 +6,7 @@ defmodule Contracts.Repo.Migrations.CreateContracts do
       add :title, :string, null: false
       add :begin, :date, null: false
       add :end, :date, null: false
+      add :file, :string, null: false
 
       timestamps()
     end
