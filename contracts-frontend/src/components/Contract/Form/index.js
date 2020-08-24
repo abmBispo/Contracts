@@ -11,6 +11,7 @@ import {
   message
 } from 'antd';
 import { formatDate } from '../../../utils/Date';
+import { useHistory } from 'react-router-dom';
 
 const key = 'updatable';
 
@@ -23,6 +24,7 @@ const openMessage = () => {
 
 export default ({ removeTab, initialValues }) => {
   const [form] = Form.useForm();
+  let history = useHistory();
 
   const onFinish = (values) => {
     const parsedValues = {
@@ -60,11 +62,6 @@ export default ({ removeTab, initialValues }) => {
     }));
   };
 
-  const handleChange = (e) => {
-    // console.log("e.target", e.target);
-    // console.log("form.fields", form.getFieldsValue());
-  }
-
   return (
     <>
       <Form
@@ -75,8 +72,7 @@ export default ({ removeTab, initialValues }) => {
         name='contract'
         size='large'
         initialValues={initialValues}
-        onFinish={onFinish}
-        onChange={handleChange}>
+        onFinish={onFinish}>
 
         <Form.Item rules={requiredFields} label="Contract title" name='title'>
           <Input />
@@ -103,9 +99,14 @@ export default ({ removeTab, initialValues }) => {
         </Form.Item>
 
         <Form.Item wrapperCol={{ span: 24 }}>
-          <Button type="primary" htmlType="submit" style={{ float: 'right' }}>
-            SAVE
-          </Button>
+          <div style={{ float: 'right' }}>
+            <Button type='danger' onClick={() => history.push('/contracts')} style={{ marginRight: 10 }}>
+              Back
+            </Button>
+            <Button type="primary" htmlType="submit">
+              SAVE
+            </Button>
+          </div>
         </Form.Item>
 
       </Form>

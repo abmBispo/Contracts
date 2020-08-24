@@ -40,7 +40,6 @@ const validateMessages = {
   }
 };
 
-
 export default ({ match }) => {
   const [form] = Form.useForm();
   const [user, setUser] = useState({});
@@ -48,16 +47,16 @@ export default ({ match }) => {
 
   const { userId } = match.params;
 
-  if (userId) {
-    useEffect(() => {
+  useEffect(() => {
+    if (userId) {
       axios.get(`${BASE_URL}/parties/${userId}`)
         .then((res) => {
           const { data } = res.data;
           form.setFieldsValue(data);
           setUser(data);
         });
-    }, []);
-  }
+    }
+  }, []);
 
   const create = (values) => {
     const parsedValues = parseValues(values);
@@ -117,9 +116,14 @@ export default ({ match }) => {
           </Form.Item>
 
           <Form.Item wrapperCol={{ span: 24 }}>
-            <Button type="primary" htmlType="submit" style={{ float: 'right' }}>
-              {userId ? "Update" : "Save"}
-            </Button>
+            <div style={{ float: 'right' }}>
+              <Button type='danger' onClick={() => history.push('/parties')} style={{ marginRight: 10 }}>
+                Back
+              </Button>
+              <Button type="primary" htmlType="submit">
+                {userId ? "Update" : "Save"}
+              </Button>
+            </div>
           </Form.Item>
         </Form>
       </div>
