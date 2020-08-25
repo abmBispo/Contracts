@@ -1,28 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Table } from 'antd';
+import { Table, Tooltip, Button } from 'antd';
 import axios from 'axios';
 import { BASE_URL } from '../../../main/consts';
-
-const columns = [
-  {
-    title: 'Title',
-    dataIndex: 'title',
-    sorter: (a, b) => a.title.length - b.title.length,
-    sortDirections: ['descend', 'ascend'],
-  },
-  {
-    title: 'Begin date',
-    dataIndex: 'begin',
-    sorter: (a, b) => a.begin - b.begin,
-    sortDirections: ['descend', 'ascend'],
-  },
-  {
-    title: 'End date',
-    dataIndex: 'end',
-    sortDirections: ['descend', 'ascend'],
-    sorter: (a, b) => a.end - b.end,
-  },
-];
+import { EditOutlined } from '@ant-design/icons'
 
 const mapApiToProps = params => {
   return {
@@ -37,6 +17,37 @@ export default (props) => {
   const [data, setData] = useState([]);
 
   useEffect(() => fetch(), [props.activeKey]);
+
+  const columns = [
+    {
+      title: 'Title',
+      dataIndex: 'title',
+      sorter: (a, b) => a.title.length - b.title.length,
+      sortDirections: ['descend', 'ascend'],
+    },
+    {
+      title: 'Begin date',
+      dataIndex: 'begin',
+      sorter: (a, b) => a.begin - b.begin,
+      sortDirections: ['descend', 'ascend'],
+    },
+    {
+      title: 'End date',
+      dataIndex: 'end',
+      sortDirections: ['descend', 'ascend'],
+      sorter: (a, b) => a.end - b.end,
+    },
+    {
+      title: 'Actions',
+      render: (text, record) => (
+        <Tooltip title={`Edit contract ${record.title}`}>
+          <Button onClick={() => props.showContract(record.id)} type='primary'>
+            <EditOutlined style={{ fontSize: 20 }} />
+          </Button>
+        </Tooltip>
+      )
+    },
+  ];
 
   const fetch = (params = {}) => {
     setLoading(true);

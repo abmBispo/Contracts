@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { Tabs, Button } from 'antd';
 import Form from './Form';
 import List from './List';
+import axios from 'axios';
+import { BASE_URL } from '../../main/consts';
 const { TabPane } = Tabs;
 
 export default () => {
   const [activeTab, setActiveTab] = useState('list');
-  const [formId, setFormId] = useState(null);
 
   const changeTab = (activeKey) => setActiveTab(activeKey);
 
@@ -17,6 +18,27 @@ export default () => {
     setPanes(newPanes);
     setActiveTab('list');
   };
+
+  const addContractTab = (contractId) => {
+    const newPanes = [...panes];
+
+    axios.get(`${BASE_URL}/contracts/${contractId}`)
+    .then((res) => {
+      const { data } = res.data;
+
+      newPanes.push({
+        title: data.title,
+        content: (
+          <div className="site-layout-content">
+            <Form removeTab={remove} initialValues={data}/>
+          </div>
+        ),
+        key: data.title
+      });
+      setPanes(newPanes);
+      changeTab(data.title);
+    });
+  }
 
   const addForm = () => {
     const shouldAdd = panes.filter((pane) => {
@@ -29,7 +51,7 @@ export default () => {
         title: 'New contract',
         content: (
           <div className="site-layout-content">
-            <Form removeTab={remove} formId={formId} />
+            <Form removeTab={remove} />
           </div>
         ),
         key: 'new-contract'
@@ -55,7 +77,7 @@ export default () => {
 
       <TabPane tab="List contracts" key="list" closable={false}>
         <div className="site-layout-content">
-          <List activeKey={activeTab} />
+          <List activeKey={activeTab} showContract={addContractTab} />
         </div>
       </TabPane>
 

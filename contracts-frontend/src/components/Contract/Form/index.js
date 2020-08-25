@@ -1,5 +1,5 @@
 import React from 'react';
-import { InboxOutlined } from '@ant-design/icons';
+import { InboxOutlined, UploadOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { BASE_URL } from '../../../main/consts';
 import {
@@ -12,6 +12,7 @@ import {
 } from 'antd';
 import { formatDate } from '../../../utils/Date';
 import { useHistory } from 'react-router-dom';
+import moment from 'moment';
 
 const key = 'updatable';
 
@@ -22,9 +23,41 @@ const openMessage = () => {
   }, 1000);
 };
 
+const validateMessages = {
+  required: '${label} is required!'
+};
+
+const parsedInitialValues = (initialValues) => {
+  return {
+    title: initialValues.title,
+    begin: moment(initialValues.begin, "DD-MM-YYYY"),
+    end: moment(initialValues.end, "DD-MM-YYYY"),
+  }
+}
+
+const getFileList = (initialValues) => {
+  return [{
+    uid: '1',
+    name: initialValues.file.file_name,
+    status: 'done',
+    url: `http://localhost:4000/priv/static/files/contracts/${initialValues.file.file_name}`,
+  }]
+}
+
+const requiredFields = [
+  {
+    required: true
+  }
+]
+
+const handleUpload = ({ onSuccess }) => {
+  return new Promise(((resolve, _) => {
+    setTimeout(() => resolve(onSuccess('done')), 500);
+  }));
+};
+
 export default ({ removeTab, initialValues }) => {
   const [form] = Form.useForm();
-  let history = useHistory();
 
   const onFinish = (values) => {
     const parsedValues = {
@@ -49,19 +82,6 @@ export default ({ removeTab, initialValues }) => {
       })
   }
 
-  const requiredFields = [
-    {
-      required: true,
-      message: "Can't be blank!",
-    }
-  ]
-
-  const handleUpload = ({ onSuccess }) => {
-    return new Promise(((resolve, _) => {
-      setTimeout(() => resolve(onSuccess('done')), 500);
-    }));
-  };
-
   return (
     <>
       <Form
@@ -71,44 +91,39 @@ export default ({ removeTab, initialValues }) => {
         layout="horizontal"
         name='contract'
         size='large'
-        initialValues={initialValues}
-        onFinish={onFinish}>
+        initialValues={initialValues ? parsedInitialValues(initialValues) : {}}
+        onFinish={onFinish}
+        validateMessages={validateMessages}>
 
-        <Form.Item rules={requiredFields} label="Contract title" name='title'>
+        <Form.Item rules={requiredFields} label="Contract title" name='title' required={false}>
           <Input />
         </Form.Item>
 
-        <Form.Item rules={requiredFields} label="Begin date" name='begin'>
+        <Form.Item rules={requiredFields} label="Begin date" name='begin' required={false}>
           <DatePicker />
         </Form.Item>
 
-        <Form.Item rules={requiredFields} label="End date" name='end'>
+        <Form.Item rules={requiredFields} label="End date" name='end' required={false}>
           <DatePicker />
         </Form.Item>
 
-        <Form.Item label="Dragger">
-          <Form.Item name="file" rules={requiredFields} valuePropName="file" multiple={false}>
-            <Upload.Dragger name="file" customRequest={handleUpload}>
-              <p className="ant-upload-drag-icon">
-                <InboxOutlined />
-              </p>
-              <p className="ant-upload-text">Click or drag file to this area to upload</p>
-              <p className="ant-upload-hint">Support for a single upload.</p>
-            </Upload.Dragger>
-          </Form.Item>
+        <Form.Item label="Contract file" name="file" rules={requiredFields} valuePropName="file" multiple={false} required={false}>
+          <Upload.Dragger name="file" customRequest={handleUpload} defaultFileList={initialValues ? getFileList(initialValues) : []}>
+            <p className="ant-upload-drag-icon">
+              <InboxOutlined />
+            </p>
+            <p className="ant-upload-text">Click or drag file to this area to upload</p>
+            <p className="ant-upload-hint">Support for a single upload.</p>
+          </Upload.Dragger>
         </Form.Item>
 
         <Form.Item wrapperCol={{ span: 24 }}>
           <div style={{ float: 'right' }}>
-            <Button type='danger' onClick={() => history.push('/contracts')} style={{ marginRight: 10 }}>
-              Back
-            </Button>
             <Button type="primary" htmlType="submit">
               SAVE
             </Button>
           </div>
         </Form.Item>
-
       </Form>
     </>
   );

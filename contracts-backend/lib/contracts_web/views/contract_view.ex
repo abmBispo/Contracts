@@ -21,7 +21,11 @@ defmodule ContractsWeb.Api.V1.ContractView do
       id: contract.id,
       title: contract.title,
       begin: locale_date(:pt_br, contract.begin),
-      end: locale_date(:pt_br, contract.end)
+      end: locale_date(:pt_br, contract.end),
+      file: %{
+        file_name: contract.file.file_name,
+        file_path: contract.file.file_name
+      }
     }
   end
 
