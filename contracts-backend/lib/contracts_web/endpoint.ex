@@ -20,13 +20,7 @@ defmodule ContractsWeb.Endpoint do
     at: "/",
     from: :contracts,
     gzip: false,
-    only: ~w(css fonts images js favicon.ico robots.txt)
-
-  plug Plug.Static,
-    at: "/priv/static",
-    from: :contracts,
-    gzip: false,
-    only: ~w(files)
+    only: ~w(css fonts images js favicon.ico robots.txt files)
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.

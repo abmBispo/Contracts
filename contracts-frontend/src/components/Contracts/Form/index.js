@@ -1,5 +1,5 @@
 import React from 'react';
-import { InboxOutlined, UploadOutlined } from '@ant-design/icons';
+import { InboxOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { BASE_URL } from '../../../main/consts';
 import {
@@ -11,8 +11,7 @@ import {
   message
 } from 'antd';
 import { formatDate } from '../../../utils/Date';
-import { useHistory } from 'react-router-dom';
-import moment from 'moment';
+import fs from 'fs';
 
 const key = 'updatable';
 
@@ -27,23 +26,6 @@ const validateMessages = {
   required: '${label} is required!'
 };
 
-const parsedInitialValues = (initialValues) => {
-  return {
-    title: initialValues.title,
-    begin: moment(initialValues.begin, "DD-MM-YYYY"),
-    end: moment(initialValues.end, "DD-MM-YYYY"),
-  }
-}
-
-const getFileList = (initialValues) => {
-  return [{
-    uid: '1',
-    name: initialValues.file.file_name,
-    status: 'done',
-    url: `http://localhost:4000/priv/static/files/contracts/${initialValues.file.file_name}`,
-  }]
-}
-
 const requiredFields = [
   {
     required: true
@@ -56,15 +38,39 @@ const handleUpload = ({ onSuccess }) => {
   }));
 };
 
+function convertToByteArray(input) {
+  var sliceSize = 512;
+  var bytes = [];
+
+  for (var offset = 0; offset < input.length; offset += sliceSize) {
+    var slice = input.slice(offset, offset + sliceSize);
+
+    var byteNumbers = new Array(slice.length);
+
+    for (var i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+
+    bytes.push(byteArray);
+  }
+
+  return bytes;
+}
+
 export default ({ removeTab, initialValues }) => {
   const [form] = Form.useForm();
 
   const onFinish = (values) => {
+    const reader = new FileReader();
+
     const parsedValues = {
       title: values.title,
       begin: formatDate(new Date(values.begin)),
       end: formatDate(new Date(values.end)),
-      file: new Blob([values.file.file], { type: 'text/pdf' }),
+      file: new Blob([values.file.file.originFileObj], { type: 'application/pdf' }),
+      // file: reader.readAsText(values.file.file.originFileObj),
       filename: values.file.file.name
     }
 
@@ -75,7 +81,7 @@ export default ({ removeTab, initialValues }) => {
     data.append('contract[file]', parsedValues.file, parsedValues.filename);
 
     axios.post(`${BASE_URL}/contracts`, data)
-      .then((res) => {
+      .then((_) => {
         form.resetFields();
         removeTab('new-contract');
         openMessage();
@@ -91,7 +97,7 @@ export default ({ removeTab, initialValues }) => {
         layout="horizontal"
         name='contract'
         size='large'
-        initialValues={initialValues ? parsedInitialValues(initialValues) : {}}
+        initialValues={initialValues}
         onFinish={onFinish}
         validateMessages={validateMessages}>
 
@@ -108,7 +114,7 @@ export default ({ removeTab, initialValues }) => {
         </Form.Item>
 
         <Form.Item label="Contract file" name="file" rules={requiredFields} valuePropName="file" multiple={false} required={false}>
-          <Upload.Dragger name="file" customRequest={handleUpload} defaultFileList={initialValues ? getFileList(initialValues) : []}>
+          <Upload.Dragger name="file" customRequest={handleUpload}>
             <p className="ant-upload-drag-icon">
               <InboxOutlined />
             </p>

@@ -4,6 +4,7 @@ import Form from './Form';
 import List from './List';
 import axios from 'axios';
 import { BASE_URL } from '../../main/consts';
+import Contract from './Contract';
 const { TabPane } = Tabs;
 
 export default () => {
@@ -23,21 +24,22 @@ export default () => {
     const newPanes = [...panes];
 
     axios.get(`${BASE_URL}/contracts/${contractId}`)
-    .then((res) => {
-      const { data } = res.data;
+      .then((res) => {
+        const { data } = res.data;
 
-      newPanes.push({
-        title: data.title,
-        content: (
-          <div className="site-layout-content">
-            <Form removeTab={remove} initialValues={data}/>
-          </div>
-        ),
-        key: data.title
+        newPanes.push({
+          title: data.title,
+          content: (
+            <div className="site-layout-content">
+              <Contract removeTab={remove} {...data}/>
+            </div>
+          ),
+          key: data.title
+        });
+
+        setPanes(newPanes);
+        changeTab(data.title);
       });
-      setPanes(newPanes);
-      changeTab(data.title);
-    });
   }
 
   const addForm = () => {
