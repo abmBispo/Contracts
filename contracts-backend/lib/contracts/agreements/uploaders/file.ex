@@ -2,7 +2,7 @@ defmodule Contracts.Agreements.Uploader.File do
   use Arc.Definition
   use Arc.Ecto.Definition
 
-  @extension_whitelist ~w(.pdf)
+  @extension_whitelist ~w(.pdf .doc)
 
   def acl(:original, _), do: :public_read
 

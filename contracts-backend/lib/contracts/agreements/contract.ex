@@ -3,20 +3,26 @@ defmodule Contracts.Agreements.Contract do
   use Arc.Ecto.Schema
   import Ecto.Changeset
 
-  alias Contracts.Agreements.Uploader.File
+  alias Contracts.Agreements.{
+    Uploader.File,
+    Part,
+    Relation
+  }
 
   schema "contracts" do
     field :begin, :date
     field :end, :date
     field :title, :string
     field :file, File.Type
+    has_many :relations, Relation
+    has_many :parts, through: [:relations, :part]
 
     timestamps()
   end
 
   @doc false
   def changeset(contract, attrs) do
-    attrs = %{ attrs | "file" => %{ attrs["file"] | filename: random_string <> "-" <> attrs["file"].filename }}
+    attrs = %{ attrs | "file" => %{ attrs["file"] | filename: random_string() <> "-" <> attrs["file"].filename }}
 
     contract
       |> cast(attrs, [:title, :begin, :end])

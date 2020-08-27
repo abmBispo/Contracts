@@ -21,4 +21,11 @@ defmodule ContractsWeb.FallbackController do
     |> put_view(ContractsWeb.ErrorView)
     |> render(:"404")
   end
+
+  def call(conn, error) do
+    conn
+    |> put_status(:not_found)
+    |> put_view(ContractsWeb.ErrorView)
+    |> render(:"404")
+  end
 end

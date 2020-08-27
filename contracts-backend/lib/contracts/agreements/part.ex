@@ -1,7 +1,11 @@
 defmodule Contracts.Agreements.Part do
   use Ecto.Schema
   import Ecto.Changeset
-  alias Contracts.Agreements.Contract
+
+  alias Contracts.Agreements.{
+    Relation,
+    Contract
+  }
 
   schema "parts" do
     field :email, :string
@@ -9,6 +13,8 @@ defmodule Contracts.Agreements.Part do
     field :surname, :string
     field :tax_id, :string
     field :telephone, :string
+    has_many :relations, Relation
+    has_many :contracts, through: [:relations, :contract]
 
     timestamps()
   end

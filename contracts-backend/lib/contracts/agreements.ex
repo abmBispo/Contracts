@@ -205,8 +205,9 @@ defmodule Contracts.Agreements do
       [%Relation{}, ...]
 
   """
-  def list_agreement_relations do
-    Repo.all(Relation)
+  def list_contract_parts(%Contract{} = contract) do
+    Ecto.assoc(contract, :parts)
+    |> Repo.all()
   end
 
   @doc """
@@ -244,24 +245,6 @@ defmodule Contracts.Agreements do
   end
 
   @doc """
-  Updates a relation.
-
-  ## Examples
-
-      iex> update_relation(relation, %{field: new_value})
-      {:ok, %Relation{}}
-
-      iex> update_relation(relation, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_relation(%Relation{} = relation, attrs) do
-    relation
-    |> Relation.changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
   Deletes a relation.
 
   ## Examples
@@ -273,8 +256,14 @@ defmodule Contracts.Agreements do
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_relation(%Relation{} = relation) do
-    Repo.delete(relation)
+  def delete_relation(%{"contract_id" => contract_id, "part_id" => part_id}) do
+    query =
+      (from relation in Relation,
+      where: relation.contract_id == ^contract_id and relation.part_id == ^part_id,
+      select: relation)
+
+    {_, relations} = Repo.delete_all(query)
+    {:ok, List.first(relations)}
   end
 
   @doc """
