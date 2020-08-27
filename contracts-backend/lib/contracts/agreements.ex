@@ -113,6 +113,16 @@ defmodule Contracts.Agreements do
   """
   def list_parts(%{ "page" => page }), do: Repo.paginate(Part, page: page)
 
+  def list_parts(%{ "query_search" => query_search }) do
+    wildcard = "%#{query_search}%"
+    query =
+      (from part in Part,
+      where: like(part.email, ^wildcard) or like(part.tax_id, ^wildcard),
+      select: part)
+
+    Repo.paginate(query, page: 1)
+  end
+
   @doc """
   Gets a single part.
 

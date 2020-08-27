@@ -21,6 +21,8 @@ defmodule Contracts.Agreements.Relation do
     relation
     |> cast(attrs, @required_fields)
     |> validate_required(@required_fields)
-    |> unique_constraint(:unique_contract_part_index, name: :unique_contract_part_index)
+    |> unique_constraint(:unique_contract_part_index,
+                          name: :unique_contract_part_index,
+                          message: "The part has already been added to contract!")
   end
 end

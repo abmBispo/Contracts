@@ -11,7 +11,6 @@ import {
   message
 } from 'antd';
 import { formatDate } from '../../../utils/Date';
-import fs from 'fs';
 
 const key = 'updatable';
 
