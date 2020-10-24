@@ -33,6 +33,8 @@ defmodule Contracts.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:guardian, "~> 2.0"},
+      {:argon2_elixir, "~> 2.0"},
       {:phoenix, "~> 1.5.1"},
       {:ex_cldr_dates_times, "~> 2.0"},
       {:cors_plug, "~> 1.5"},

@@ -17,7 +17,7 @@ defmodule Contracts.Agreements do
       [%Contract{}, ...]
 
   """
-  def list_contracts(%{ "page" => page }), do: Repo.paginate(Contract, page: page)
+  def list_contracts(%{"page" => page}), do: Repo.paginate(Contract, page: page)
 
   @doc """
   Gets a single contract.
@@ -111,14 +111,15 @@ defmodule Contracts.Agreements do
       [%Part{}, ...]
 
   """
-  def list_parts(%{ "page" => page }), do: Repo.paginate(Part, page: page)
+  def list_parts(%{"page" => page}), do: Repo.paginate(Part, page: page)
 
-  def list_parts(%{ "query_search" => query_search }) do
+  def list_parts(%{"query_search" => query_search}) do
     wildcard = "%#{query_search}%"
+
     query =
-      (from part in Part,
-      where: like(part.email, ^wildcard) or like(part.tax_id, ^wildcard),
-      select: part)
+      from part in Part,
+        where: like(part.email, ^wildcard) or like(part.tax_id, ^wildcard),
+        select: part
 
     Repo.paginate(query, page: 1)
   end
@@ -152,7 +153,7 @@ defmodule Contracts.Agreements do
 
   """
   def create_part(attrs \\ %{}) do
-    %Part{}
+    %Part.Registration{}
     |> Part.changeset(attrs)
     |> Repo.insert()
   end
@@ -167,9 +168,8 @@ defmodule Contracts.Agreements do
 
       iex> update_part(part, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
-
   """
-  def update_part(%Part{} = part, attrs) do
+  def update_part(%Part.Account{} = part, attrs) do
     part
     |> Part.changeset(attrs)
     |> Repo.update()
@@ -187,7 +187,7 @@ defmodule Contracts.Agreements do
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_part(%Part{} = part) do
+  def delete_part(%Part.Account{} = part) do
     Repo.delete(part)
   end
 
@@ -200,7 +200,8 @@ defmodule Contracts.Agreements do
       %Ecto.Changeset{data: %Part{}}
 
   """
-  def change_part(%Part{} = part, attrs \\ %{}) do
+
+  def change_part(%Part.Account{} = part, attrs \\ %{}) do
     Part.changeset(part, attrs)
   end
 
@@ -268,9 +269,9 @@ defmodule Contracts.Agreements do
   """
   def delete_relation(%{"contract_id" => contract_id, "part_id" => part_id}) do
     query =
-      (from relation in Relation,
-      where: relation.contract_id == ^contract_id and relation.part_id == ^part_id,
-      select: relation)
+      from relation in Relation,
+        where: relation.contract_id == ^contract_id and relation.part_id == ^part_id,
+        select: relation
 
     {_, relations} = Repo.delete_all(query)
     {:ok, List.first(relations)}
