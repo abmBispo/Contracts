@@ -12,7 +12,7 @@ defmodule ContractsWeb.Api.V1.PartController do
   end
 
   def create(conn, %{"part" => part_params}) do
-    with {:ok, %Part.Account{} = part} <- Agreements.create_part(part_params) do
+    with {:ok, %Part.Registration{} = part} <- Agreements.create_part(part_params) do
       conn
       |> put_status(:created)
       |> put_resp_header("location", Routes.part_path(conn, :show, part))

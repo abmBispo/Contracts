@@ -4,7 +4,7 @@ defmodule Contracts.Repo.Migrations.CreateAccounts do
   def change do
     create table(:accounts) do
       add :email, :string, null: false
-      add :password_digest, :string, null: false
+      add :password, :string, null: false
 
       timestamps()
     end

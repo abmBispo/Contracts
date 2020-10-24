@@ -153,8 +153,37 @@ defmodule Contracts.Agreements do
 
   """
   def create_part(attrs \\ %{}) do
-    %Part.Registration{}
-    |> Part.changeset(attrs)
+    registration =
+      %Part.Registration{}
+      |> Part.Registration.changeset(attrs)
+
+    if registration.valid? do
+      Repo.transaction(fn ->
+        with {:ok, account} <- create_account(registration),
+             {:ok, profile} <- create_profile(registration, account) do
+          Part.Registration.mount_part(%{account: account, profile: profile})
+        else
+          {:error, error} ->
+            Repo.rollback(error)
+        end
+      end)
+    else
+      registration = %{registration | action: :registration}
+      {:error, registration}
+    end
+  end
+
+  defp create_account(registration) do
+    registration
+    |> Part.Registration.to_account()
+    |> Part.Account.changeset()
+    |> Repo.insert()
+  end
+
+  defp create_profile(registration, account) do
+    registration
+    |> Part.Registration.to_profile()
+    |> Part.Profile.changeset(%{account: account})
     |> Repo.insert()
   end
 

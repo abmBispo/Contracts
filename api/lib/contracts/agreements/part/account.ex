@@ -3,27 +3,29 @@ defmodule Contracts.Agreements.Part.Account do
   import Ecto.Changeset
   alias Contracts.Agreements.Relation
 
-  @fields [:email, :password_digest]
+  @fields [:email, :password]
 
   schema "accounts" do
     field :email, :string
-    field :password_digest, :string
+    field :password, :string
     has_many :relations, Relation
     has_many :contracts, through: [:relations, :contract]
 
     timestamps()
   end
 
-  def changeset(part, attrs) do
-    part
+  def changeset(account, attrs \\ %{}) do
+    account
     |> cast(attrs, @fields)
-    |> put_password_digest()
+    |> put_change(:password, "123456")
+    |> put_password()
     |> validate_required(@fields)
+    |> unique_constraint(:email)
   end
 
-  defp put_password_digest(%{valid?: true, changes: %{password: password}} = changeset) do
-    change(changeset, password_digest: Argon2.hash_pwd_salt(password))
+  defp put_password(%{valid?: true, changes: %{password: password}} = changeset) do
+    change(changeset, password: Argon2.hash_pwd_salt(password))
   end
 
-  defp put_password_digest(changeset), do: changeset
+  defp put_password(changeset), do: changeset
 end
