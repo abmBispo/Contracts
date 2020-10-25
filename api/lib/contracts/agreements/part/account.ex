@@ -1,13 +1,17 @@
 defmodule Contracts.Agreements.Part.Account do
   use Ecto.Schema
   import Ecto.Changeset
-  alias Contracts.Agreements.Relation
+  alias Contracts.Agreements.{
+    Part.Profile,
+    Relation
+  }
 
   @fields [:email, :password]
 
   schema "accounts" do
     field :email, :string
     field :password, :string
+    has_one :profile, Profile
     has_many :relations, Relation
     has_many :contracts, through: [:relations, :contract]
 

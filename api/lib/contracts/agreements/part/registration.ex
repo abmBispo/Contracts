@@ -37,12 +37,14 @@ defmodule Contracts.Agreements.Part.Registration do
   end
 
   def mount_part(%{profile: profile, account: account}) do
-    %Registration{
+    %Account{
       id: account.id,
       email: account.email,
-      name: profile.name,
-      tax_id: profile.tax_id,
-      telephone: profile.telephone
+      profile: %{
+        name: profile.name,
+        tax_id: profile.tax_id,
+        telephone: profile.telephone
+      },
     }
   end
 end

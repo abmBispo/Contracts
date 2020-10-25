@@ -101,6 +101,8 @@ defmodule Contracts.Agreements do
   end
 
   alias Contracts.Agreements.Part
+  alias Contracts.Agreements.Part.Account
+  alias Contracts.Agreements.Part.Profile
 
   @doc """
   Returns the list of parts.
@@ -111,18 +113,17 @@ defmodule Contracts.Agreements do
       [%Part{}, ...]
 
   """
-  def list_parts(%{"page" => page}), do: Repo.paginate(Part, page: page)
-
-  def list_parts(%{"query_search" => query_search}) do
-    wildcard = "%#{query_search}%"
-
-    query =
-      from part in Part,
-        where: like(part.email, ^wildcard) or like(part.tax_id, ^wildcard),
-        select: part
-
-    Repo.paginate(query, page: 1)
+  def list_parts(params \\ %{"page" => 1}) do
+    Account
+    |> join(:inner, [a], p in Profile, as: :profiles, on: a.id == p.account_id)
+    |> order_by(^filter_order_by(params["order_by"]))
+    |> preload(:profile)
+    |> Repo.paginate(page: params["page"])
   end
+
+  defp filter_order_by("name_desc"), do: [desc: dynamic([profiles: p], p.name)]
+  defp filter_order_by("name"), do: dynamic([profiles: p], p.name)
+  defp filter_order_by(_), do: []
 
   @doc """
   Gets a single part.

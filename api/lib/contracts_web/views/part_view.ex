@@ -17,11 +17,12 @@ defmodule ContractsWeb.Api.V1.PartView do
   end
 
   def render("part.json", %{part: part}) do
-    %{id: part.id,
-      name: part.name,
-      surname: part.surname,
+    %{
+      id: part.id,
       email: part.email,
-      tax_id: part.tax_id,
-      telephone: part.telephone}
+      name: part.profile.name,
+      tax_id: part.profile.tax_id,
+      telephone: part.profile.telephone
+    }
   end
 end
