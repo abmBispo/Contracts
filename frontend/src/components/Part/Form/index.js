@@ -24,7 +24,6 @@ const parseValues = (values) => {
   return {
     part: {
       name: values.name,
-      surname: values.surname,
       email: values.email,
       tax_id: values.tax_id,
       telephone: values.telephone,
@@ -81,7 +80,7 @@ export default ({ match }) => {
       <Breadcrumb style={{ margin: '16px 0' }}>
         <Breadcrumb.Item>App</Breadcrumb.Item>
         <Breadcrumb.Item href='/#/parties'>Parties</Breadcrumb.Item>
-        <Breadcrumb.Item>{userId ? `${user.name} ${user.surname}` : 'New Part'}</Breadcrumb.Item>
+        <Breadcrumb.Item>{userId ? `${user.name}` : 'New Part'}</Breadcrumb.Item>
       </Breadcrumb>
 
       <div className="site-layout-content">
@@ -99,9 +98,13 @@ export default ({ match }) => {
             <Input />
           </Form.Item>
 
-          <Form.Item rules={requiredFields} label="Surname" name='surname' required={false}>
-            <Input />
-          </Form.Item>
+          {
+            userId ?
+              false :
+              <Form.Item rules={requiredFields} label="Surname" name='surname' required={false}>
+                <Input />
+              </Form.Item>
+          }
 
           <Form.Item rules={[{ required: true, type: 'email' }]} label="E-mail" name='email' required={false}>
             <Input />
