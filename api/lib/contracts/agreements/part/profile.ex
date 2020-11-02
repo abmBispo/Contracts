@@ -14,10 +14,16 @@ defmodule Contracts.Agreements.Part.Profile do
     timestamps()
   end
 
-  def changeset(profile, attrs \\ %{}) do
+  def changeset(profile, :create, attrs) do
     profile
     |> cast(attrs, @fields)
     |> put_assoc(:account, attrs.account)
+    |> validate_required(@fields)
+  end
+
+  def changeset(profile, :update, attrs) do
+    profile
+    |> cast(attrs, @fields)
     |> validate_required(@fields)
   end
 end

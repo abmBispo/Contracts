@@ -139,7 +139,11 @@ defmodule Contracts.Agreements do
       ** (Ecto.NoResultsError)
 
   """
-  def get_part!(id), do: Repo.get!(Part, id)
+  def get_part!(id) do
+    Account
+    |> preload(:profile)
+    |> Repo.get!(id)
+  end
 
   @doc """
   Creates a part.
@@ -177,14 +181,14 @@ defmodule Contracts.Agreements do
   defp create_account(registration) do
     registration
     |> Part.Registration.to_account()
-    |> Part.Account.changeset()
+    |> Part.Account.changeset(:create, %{})
     |> Repo.insert()
   end
 
   defp create_profile(registration, account) do
     registration
     |> Part.Registration.to_profile()
-    |> Part.Profile.changeset(%{account: account})
+    |> Part.Profile.changeset(:create, %{account: account})
     |> Repo.insert()
   end
 
@@ -199,9 +203,9 @@ defmodule Contracts.Agreements do
       iex> update_part(part, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
   """
-  def update_part(%Part.Account{} = part, attrs) do
-    part
-    |> Part.changeset(attrs)
+  def update_part(%Part.Account{} = account, attrs) do
+    account
+    |> Account.changeset(:update, attrs)
     |> Repo.update()
   end
 

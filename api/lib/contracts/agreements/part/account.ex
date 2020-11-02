@@ -1,6 +1,7 @@
 defmodule Contracts.Agreements.Part.Account do
   use Ecto.Schema
   import Ecto.Changeset
+
   alias Contracts.Agreements.{
     Part.Profile,
     Relation
@@ -18,11 +19,26 @@ defmodule Contracts.Agreements.Part.Account do
     timestamps()
   end
 
-  def changeset(account, attrs \\ %{}) do
+  def changeset(account, :create, attrs) do
     account
     |> cast(attrs, @fields)
     |> put_change(:password, "123456")
     |> put_password()
+    |> validate_required(@fields)
+    |> unique_constraint(:email)
+  end
+
+  def changeset(account, :update, attrs) do
+    profile = Profile.changeset(account.profile, :update, %{
+      id: account.profile.id,
+      name: attrs["name"],
+      tax_id: attrs["tax_id"],
+      telephone: attrs["telephone"]
+    })
+
+    account
+    |> cast(attrs, @fields)
+    |> put_assoc(:profile, profile)
     |> validate_required(@fields)
     |> unique_constraint(:email)
   end
