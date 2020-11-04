@@ -4,11 +4,9 @@
 # remember to add this file to your .gitignore.
 import Config
 
-database_url = "postgres://kowfwzyn:hentTUtDmaeI5EFOeRJfxbaZzmwwE7VW@tuffi.db.elephantsql.com:5432/kowfwzyn"
-
 config :contracts, Contracts.Repo,
-  # ssl: true,
-  url: database_url,
+  ssl: true,
+  url: System.get_env("database_url"),
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "2")
 
 secret_key_base = "wV9U4NiV8VvmJC1/iG7IEIj2prOaZmwUB2scsx7f4IAcHMXm4TdulKjOsFHVlTaH"
