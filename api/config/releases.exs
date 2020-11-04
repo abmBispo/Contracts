@@ -9,14 +9,12 @@ config :contracts, Contracts.Repo,
   url: System.get_env("database_url"),
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "2")
 
-secret_key_base = "wV9U4NiV8VvmJC1/iG7IEIj2prOaZmwUB2scsx7f4IAcHMXm4TdulKjOsFHVlTaH"
-
 config :contracts, ContractsWeb.Endpoint,
   http: [
     port: String.to_integer(System.get_env("PORT") || "4000"),
     transport_options: [socket_opts: [:inet6]]
   ],
-  secret_key_base: secret_key_base
+  secret_key_base: System.get_env("secret_key_base")
 
 # ## Using releases (Elixir v1.9+)
 #
